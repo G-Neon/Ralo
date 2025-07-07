@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Nama Lo, Nasib Lo</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #ced3f2, #ffedd2);
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      transition: background 0.5s ease;
+    }
+
+    .screen {
+      display: none;
+      padding: 2em;
+    }
+
+    .active {
+      display: block;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      font-size: 3rem;
+      margin-top: 30vh;
+      color: #000000;
+      animation: popUp 1s ease;
+    }
+
+    @keyframes popUp {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .random-text {
+      font-size: 1.2rem;
+      color: #666;
+      margin-top: 10px;
+    }
+
+    button, input, select, textarea {
+      font-size: 1rem;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 10px;
+      margin: 10px;
+      transition: 0.3s ease;
+    }
+
+    button {
+      background-color: #6c5ce7;
+      color: white;
+      cursor: pointer;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+      background-color: #a29bfe;
+    }
+
+    input, select, textarea {
+      border: 2px solid #eee;
+      width: 250px;
+      border-radius: 10px;
+    }
+
+    textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    .popup-button {
+      display: inline-block;
+      width: 250px;
+      padding: 15px;
+      margin: 10px auto;
+      border-radius: 20px;
+      background-color: #ffeaa7;
+      color: #2d3436;
+      font-weight: bold;
+      box-shadow: 3px 3px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .popup-button:hover {
+      transform: scale(1.05);
+      background-color: #fab1a0;
+    }
+
+    .result, .copied, #totalStatus, #motivasiHarian, #simArea, #quizResult, #storyResult {
+      background: white;
+      margin: 20px auto;
+      padding: 15px;
+      max-width: 500px;
+      border-radius: 15px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+      text-align: left;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .back-btn {
+      background-color: #dfe6e9;
+      color: #2d3436;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      margin-top: 15px;
+      border-radius: 8px;
+      border: 1px solid #b2bec3;
+    }
+
+    .back-btn:hover {
+      background-color: #b2bec3;
+      color: white;
+    }
+
+    #fitur1 h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5em;
+  color: #000000;
+}
+
+#fitur1 p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1em;
+}
+
+#fitur1 input {
+  display: block;
+  margin: 0 auto 1em;
+  padding: 12px 15px;
+  width: 280px;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-size: 1rem;
+}
+
+#fitur1 button {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #55a4ff;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+#fitur1 button:hover {
+  background: #ffa1d6;
+}
+
+#resultBox {
+  border-left: 5px solid #323232;
+  background-color: #fff;
+  padding: 1em;
+  margin-top: 1em;
+  border-radius: 15px;
+  text-align: left;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+}
+
+#fitur1 .buttons {
+  margin-top: 1em;
+}
+
+#fitur1 .buttons button {
+  margin-right: 10px;
+  background-color: #39e61f;
+}
+
+#fitur1 .buttons button:hover {
+  background-color: #1ac51a;
+}
+
+#fitur1 .copied {
+  color: rgb(45, 45, 45);
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+#fitur2 h2 {
+  color: #000000;
+  margin-bottom: 0.5em;
+}
+
+#fitur2 input, #fitur2 select {
+  display: block;
+  margin: 0.5em auto;
+  width: 260px;
+  padding: 10px 15px;
+  border: 2px solid #f8c0d5;
+  border-radius: 12px;
+  background: #fff0f6;
+}
+
+#fitur2 button {
+  background-color: #6fbcff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+#fitur2 button:hover {
+  background-color: #ffb3d0;
+}
+
+#fitur3 h2 {
+  color: #00b894;
+  margin-bottom: 0.5em;
+}
+
+#fitur3 input {
+  display: block;
+  margin: 0.5em auto;
+  width: 260px;
+  padding: 10px;
+  border: 2px solid #a3ffe5;
+  border-radius: 12px;
+  background: #eafff9;
+}
+
+#fitur3 button {
+  background-color: #00cec9;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+#fitur3 button:hover {
+  background-color: #81ecec;
+}
+
+#fitur3 ul {
+  list-style-type: none;
+  padding: 0;
+  max-width: 400px;
+  margin: 1em auto;
+  text-align: left;
+}
+
+#fitur3 ul li {
+  background: #ffffff;
+  border: 1px solid #dfe6e9;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  font-size: 0.95rem;
+}
+
+#fitur4 h2 {
+  color: #6c5ce7;
+  margin-bottom: 0.5em;
+}
+
+#fitur4 input, #fitur4 select {
+  display: block;
+  margin: 0.5em auto;
+  width: 260px;
+  padding: 10px;
+  border: 2px solid #dcdcff;
+  border-radius: 12px;
+  background: #f0f0ff;
+}
+
+#fitur4 button {
+  background-color: #6c5ce7;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+#fitur4 button:hover {
+  background-color: #a29bfe;
+}
+
+#fitur5 h2 {
+  color: #0984e3;
+  margin-bottom: 0.5em;
+}
+
+#fitur5 textarea {
+  width: 90%;
+  max-width: 500px;
+  margin: 0.5em auto;
+  display: block;
+  padding: 12px;
+  border: 2px solid #cce7ff;
+  border-radius: 12px;
+  background: #e8f4ff;
+}
+
+#fitur5 button {
+  background-color: #0984e3;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+#fitur5 button:hover {
+  background-color: #74b9ff;
+}
+
+#fitur6 h2 {
+  color: #0984e3;
+  margin-bottom: 1em;
+}
+
+#fitur6 input {
+  display: block;
+  margin: 0.5em auto;
+  width: 260px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid #dfe6e9;
+}
+
+#fitur6 button {
+  background-color: #74b9ff;
+  color: white;
+}
+
+#fitur6 button:hover {
+  background-color: #a0cfff;
+}
+  </style>
+</head>
+<body>
+  <div id="introScreen" class="screen active">
+    <div class="logo">🌟 Ralo 🌟</div>
+    <div class="random-text" id="introText"></div>
+  </div>
+
+  <div id="mainMenu" class="screen">
+    <h2>🧩 Pilih Fitur Unikmu</h2>
+    <div class="popup-button" onclick="showFeature('fitur1')">👤🔍 Nama Lo, Nasib Lo</div>
+    <div class="popup-button" onclick="showFeature('fitur2')">🎭 Story Halu Generator</div>
+    <div class="popup-button" onclick="showFeature('fitur3')">💸 Money Tracker Lucu</div>
+    <div class="popup-button" onclick="showFeature('fitur4')">🧠 Kuis Kepribadian Absurd</div>
+    <div class="popup-button" onclick="showFeature('fitur5')">📓 Catatan Harian + To-Do</div>
+    <div class="popup-button" onclick="showFeature('fitur6')">🤖 Simulator Haluan Hidup</div>
+    <div class="popup-button" onclick="showFeature('fitur7')">🔮 Arti Mimpi</div>
+  </div>
+
+<!-- Fitur 1: Jangan diubah -->
+<div id="fitur1" class="screen">
+  <h1>👤 Nama Lo, Nasib Lo 🔍</h1>
+  <p>Tulis nama depan lo atau siapapun, dan lihat hasilnya 😜</p>
+
+  <input type="text" id="nameInput" placeholder="Nama depan lo...">
+  <button onclick="generate()">Lihat Ramalan</button>
+
+  <div id="resultBox" class="result hidden"></div>
+
+  <div class="buttons hidden" id="extraButtons">
+    <button onclick="copyResult()">📋 Salin Hasil</button>
+    <button onclick="reset()">🔁 Coba Lagi</button>
+  </div>
+</div>
+
+ <!-- Fitur 2 -->
+<div id="fitur2" class="screen">
+  <h2>🎭 Story Halu Generator</h2>
+  <input type="text" id="storyName" placeholder="Masukkan nama lo...">
+  <select id="genre">
+    <option value="sedih">Sedih</option>
+    <option value="lucu">Lucu</option>
+    <option value="romantis">Romantis</option>
+    <option value="horor">Horor</option>
+  </select>
+  <button onclick="generateStory()">✨ Bikin Cerita</button>
+  <div id="storyResult" class="result"></div>
+</div>
+
+<!-- Fitur 3 -->
+<div id="fitur3" class="screen">
+  <h2>💸 Money Tracker</h2>
+  <input type="text" id="moneyDesc" placeholder="Untuk apa?">
+  <input type="number" id="moneyAmount" placeholder="Jumlah (contoh: 15000)">
+  <button onclick="addExpense()">Tambah Catatan</button>
+  <ul id="moneyList"></ul>
+  <canvas id="moneyChart" width="400" height="150"></canvas>
+  <p id="totalStatus"></p>
+</div>
+
+<!-- Fitur 4 -->
+<div id="fitur4" class="screen">
+  <h2>🧠 Kuis Kepribadian Absurd</h2>
+  <input type="text" id="quizName" placeholder="Masukkan nama lo...">
+  <p>Apa yang lo pilih waktu suntuk?</p>
+  <select id="q1">
+    <option value="tidur">Tidur</option>
+    <option value="scroll">Scroll TikTok</option>
+    <option value="halu">Halu bareng karakter 2D</option>
+  </select>
+  <p>Kalau ditolak crush lo, lo bakal?</p>
+  <select id="q2">
+    <option value="nangis">Nangis 3 hari</option>
+    <option value="moveon">Langsung move on</option>
+    <option value="balas">Balas dengan jadi sukses</option>
+  </select>
+  <button onclick="submitQuiz()">Liat Hasil</button>
+  <div id="quizResult" class="result"></div>
+</div>
+
+<!-- Fitur 5 -->
+<div id="fitur5" class="screen">
+  <h2>📓 Catatan Harian</h2>
+  <textarea id="dailyNote" placeholder="Tulis isi hati..." rows="4"></textarea><br>
+  <button onclick="saveNote()">Simpan</button>
+  <p id="motivasiHarian"></p>
+</div>
+
+<!-- Fitur 6 -->
+<div id="fitur6" class="screen">
+  <h2>🤖 Simulator Hidup</h2>
+  <input type="text" id="simName" placeholder="Masukkan nama lo...">
+  <button onclick="mulaiSimulasi()">Mulai Simulasi</button>
+  <div id="simArea" class="result"></div>
+</div>
+
+<!-- Fitur 7 -->
+<div id="fitur7" class="screen">
+  <h2>🔮 Arti Mimpi</h2>
+  <textarea id="mimpiInput" rows="3" placeholder="Tulis mimpi lo... contoh: dikejar bebek"></textarea><br>
+  <button onclick="tafsirkanMimpi()">Tafsirkan Mimpiku</button>
+  <div id="mimpiHasil" class="result"></div>
+</div>
+
+  <script>
+    const introTexts = [
+      "Lagi baca nasib lo ya?",
+      "Kita gak jamin akurat, tapi lucu sih 😜",
+      "Scroll scroll... eh malah nemu jodoh~",
+      "Namamu = takdirmu (katanya)",
+      "Bentar ya lagi ngaduk teh..",
+      "Sabar ya lagi berak..",
+      "Loading bentar.."
+    ];
+    document.getElementById("introText").innerText = introTexts[Math.floor(Math.random()*introTexts.length)];
+
+    setTimeout(() => {
+      document.getElementById("introScreen").classList.remove("active");
+      document.getElementById("mainMenu").classList.add("active");
+    }, 4000);
+
+    function showFeature(id) {
+      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      addBackButton(id);
+    }
+
+    function addBackButton(id) {
+      const container = document.getElementById(id);
+      if (!container.querySelector('.back-btn')) {
+        const backBtn = document.createElement('button');
+        backBtn.innerText = '⬅️ Kembali';
+        backBtn.className = 'back-btn';
+        backBtn.onclick = () => {
+          container.classList.remove('active');
+          document.getElementById('mainMenu').classList.add('active');
+        };
+        container.appendChild(backBtn);
+      }
+    }
+  </script>
+
+<script>
+    <!-- ==================== Fitur 1: Ramalan Nama ==================== -->
+  function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      hash = hash & hash;
+    }
+    return Math.abs(hash);
+  }
+
+  function generate() {
+    const name = document.getElementById("nameInput").value.trim().toLowerCase();
+    if (!name) return;
+
+    const hash = hashString(name);
+    const resultBox = document.getElementById("resultBox");
+
+    let kepribadian = "";
+
+    const vokal = ['a', 'e', 'i', 'o', 'u', 'p'];
+    const keras = ['k', 'd', 'r', 'g', 't', 'b', 'f'];
+    const lembut = ['l', 'm', 's', 'n', 'c', 'j'];
+    const misterius = ['x', 'z', 'y', 'v', 'h', 'w', 'q'];
+
+    if (vokal.includes(name[0])) {
+      kepribadian += "Anaknya cenderung tenang dan santai. ";
+    } else if (keras.includes(name[0])) {
+      kepribadian += "Punya aura tegas dan semangat tinggi. ";
+    } else if (lembut.includes(name[0])) {
+      kepribadian += "Kelihatan kalem, tapi dalem. ";
+    }
+
+    if (name.split('').some(c => misterius.includes(c))) {
+      kepribadian += "Suka mikir beda sendiri, kadang susah ditebak. ";
+    }
+    if (name.split('').some(c => lembut.includes(c))) {
+      kepribadian += "Orangnya perhatian dan suka bikin nyaman. ";
+    }
+    if (name.split('').some(c => keras.includes(c))) {
+      kepribadian += "Kalau udah niat, gas terus. Gak bisa setengah-setengah. ";
+    }
+
+    if (name.length < 5) {
+      kepribadian += "Tipe yang simpel, cepet mikir, cepet jalan. ";
+    } else if (name.length <= 8) {
+      kepribadian += "Balance, kadang impulsif kadang mikir panjang. ";
+    } else {
+      kepribadian += "Suka mikir dalem banget sampe overthinking. ";
+    }
+
+    const gayaPacaran = [
+      "Nempel terus kayak lem UHU",
+      "Gak suka ribet, yang penting bareng",
+      "Pacaran cuma kalo udah kenyang",
+      "Tipe cuek, tapi kalo sayang ya all in",
+      "Suka kasih hadiah receh, tapi niat",
+      "Suka cemburuan gajelas",
+      "posesif sekaleh",
+      "gamau gengsi, dia harus peka dulu baru aku gerak"
+    ];
+
+    const inisialJodoh = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+
+    const disukai = [
+      "Yang bisa diajak ngobrol dari pagi sampe pagi lagi",
+      "Makanan gratis (siapa sih yang gak?)",
+      "Orang yang ngerti kode tanpa dikodein",
+      "Galauin doi terus",
+      "Tidur siang tanpa diganggu",
+      "Nahan berak",
+      "Bucin sama idolanya",
+      "Makan sambil angkat kaki",
+      "gOsiPin OraNgg"
+    ];
+
+    const tidakDisukai = [
+      "Chat dibales 'Y'",
+      "Janji tapi gak dateng-dateng",
+      "Orang yang suka motong cerita",
+      "Temen yang suka pinjem duit",
+      "Ngantuk tapi harus bangun pagi",
+      "Ga sengaja berak di celana",
+      "pas lagi bokek"
+    ];
+
+    const hasil = `
+      <strong>Nama:</strong> ${name}<br><br>
+      <strong>Kepribadian lo:</strong> ${kepribadian}<br>
+      <strong>Gaya pacaran lo:</strong> ${gayaPacaran[(hash >> 2) % gayaPacaran.length]}<br>
+      <strong>Inisial jodoh lo:</strong> ${inisialJodoh[(hash >> 3) % inisialJodoh.length]}<br>
+      <strong>Yang lo suka:</strong> ${disukai[(hash >> 4) % disukai.length]}<br>
+      <strong>Yang lo paling gak suka:</strong> ${tidakDisukai[(hash >> 5) % tidakDisukai.length]}<br>
+    `;
+
+    resultBox.innerHTML = hasil;
+    resultBox.classList.remove("hidden");
+    document.getElementById("extraButtons").classList.remove("hidden");
+    document.getElementById("copiedMsg").classList.add("hidden");
+  }
+
+  function copyResult() {
+    const resultText = document.getElementById("resultBox").innerText;
+    navigator.clipboard.writeText(resultText).then(() => {
+      document.getElementById("copiedMsg").classList.remove("hidden");
+    });
+  }
+
+  function reset() {
+    document.getElementById("nameInput").value = "";
+    document.getElementById("resultBox").classList.add("hidden");
+    document.getElementById("extraButtons").classList.add("hidden");
+    document.getElementById("copiedMsg").classList.add("hidden");
+  }
+</script>
+
+<!-- ==================== Fitur 2: Story Halu Generator ==================== -->
+<script>
+  function generateStory() {
+    const name = document.getElementById("storyName").value.trim();
+    const genre = document.getElementById("genre").value;
+    const result = document.getElementById("storyResult");
+
+    if (!name) {
+      result.innerHTML = "<p>Masukkan nama dulu dong 😅</p>";
+      return;
+    }
+
+    const opening = [
+      `${name} bangun pagi-pagi dan merasa ada yang aneh.`,
+      `Hari itu, ${name} merasa hidupnya bakal berubah.`,
+      `${name} lagi ngupil tiba-tiba kepikiran sesuatu yang besar.`,
+      `Setelah makan mie instan, ${name} mendadak jadi puitis.`,
+      `${name} ngaca lalu bilang: "Waktunya gue bersinar!"`,
+    ];
+
+    const sad = [
+      "Ternyata semua cuma mimpi, dan kenyataannya dia sendirian di kos.",
+      "Orang yang dia suka, malah jadian sama temennya.",
+      "Dia ngetik 'hmm' padahal hatinya jerit.",
+      "Hari itu hujan, dan cuma dia yang gak punya payung... juga gak ada yang nawarin.",
+      "Dia upload story, tapi gak ada yang nonton, kecuali dirinya sendiri.",
+      "Ketika kamu melihat dia bersama yang lain"
+    ];
+
+    const funny = [
+      "Ternyata dia jadi viral karena jatoh dari motor tapi tetap pose aesthetic.",
+      "Dia nemu dompet, isinya cuma koin receh dan kartu member tahu bulat.",
+      "Dia ngaku introvert, tapi tiap hari curhat sama kucing komplek.",
+      "Pas ngechat crush-nya, malah salah kirim ke grup keluarga.",
+      "Dia mimpi jadi artis, tapi bangun karena ketindihan remote.",
+    ];
+
+    const romantic = [
+      "Ternyata, orang yang selama ini dia cuekin diam-diam ngagumin dia.",
+      "Dia dikasih coklat, bukan karena Valentine, tapi karena dianggap 'lucu kayak hamster'.",
+      "Tanpa sengaja, tangan mereka bersentuhan pas rebutan kerupuk.",
+      "Mereka jadian... gara-gara rebutan charger.",
+      "Dia disamperin di halte... sama orang yang pernah dia bantu waktu kecil.",
+    ];
+
+    const horror = [
+      "Pas ngaca, dia lihat bayangan yang senyum padahal dia gak.",
+      "HP-nya ngechat sendiri jam 3 pagi, padahal dia sendirian.",
+      "Dia ketok kamar sebelah... tapi ingat, dia tinggal sendirian.",
+      "Di foto selfie-nya, ada tangan lebih dari dua.",
+      "TV nyala sendiri dan muterin lagu ulang tahun, padahal dia ultah minggu depan.",
+      "Ketika lo lagi sendirian di sebuah ruangan, tiba-tiba ada bau kentut padahal lo ga kentut"
+    ];
+
+    let genreStory = [];
+
+    switch (genre) {
+      case "sedih": genreStory = sad; break;
+      case "lucu": genreStory = funny; break;
+      case "romantis": genreStory = romantic; break;
+      case "horor": genreStory = horror; break;
+    }
+
+    const intro = opening[Math.floor(Math.random() * opening.length)];
+    const plot = genreStory[Math.floor(Math.random() * genreStory.length)];
+
+    const story = `
+      <strong>Judul:</strong> "Kisah ${name}"<br><br>
+      ${intro}<br><br>
+      ${plot}
+    `;
+
+    result.innerHTML = story;
+  }
+</script>
+
+<!-- ==================== Fitur 3: Money Tracker Lucu ==================== -->
+<script>
+  let pengeluaran = [];
+
+  function addExpense() {
+    const desc = document.getElementById("moneyDesc").value.trim();
+    const amount = parseInt(document.getElementById("moneyAmount").value.trim());
+    const list = document.getElementById("moneyList");
+    const totalStatus = document.getElementById("totalStatus");
+
+    if (!desc || isNaN(amount) || amount <= 0) {
+      alert("Isi deskripsi dan jumlah yang valid ya!");
+      return;
+    }
+
+    pengeluaran.push({ desc, amount });
+    list.innerHTML = "";
+
+    pengeluaran.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.desc} - Rp${item.amount.toLocaleString()}`;
+      list.appendChild(li);
+    });
+
+    const total = pengeluaran.reduce((sum, item) => sum + item.amount, 0);
+    let statusText = "";
+
+    if (total < 20000) {
+      statusText = "Dompetmu masih senyum 😊";
+    } else if (total < 50000) {
+      statusText = "Dompetmu mulai mikir 🤔";
+    } else if (total < 100000) {
+      statusText = "Dompetmu mulai cemas 😰";
+    } else {
+      statusText = "DOMPETMU NANGIS 💸😭";
+    }
+
+    totalStatus.innerHTML = `<strong>Total:</strong> Rp${total.toLocaleString()}<br>${statusText}`;
+    updateChart();
+  }
+
+  let chart;
+
+  function updateChart() {
+    const ctx = document.getElementById("moneyChart").getContext("2d");
+
+    if (chart) chart.destroy(); // hapus chart lama
+
+    const labels = pengeluaran.map(item => item.desc);
+    const data = pengeluaran.map(item => item.amount);
+    const colors = pengeluaran.map(() => `hsl(${Math.random() * 360}, 70%, 70%)`);
+
+    chart = new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: colors
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  }
+</script>
+
+<script>
+  function submitQuiz() {
+    const name = document.getElementById("quizName").value.trim();
+    const q1 = document.getElementById("q1").value;
+    const q2 = document.getElementById("q2").value;
+    const result = document.getElementById("quizResult");
+
+    if (!name) {
+      result.innerHTML = "<p>Isi nama dulu dong 😅</p>";
+      return;
+    }
+
+    const kombinasi = q1 + "-" + q2;
+    let hasil = "";
+
+    switch (kombinasi) {
+      case "tidur-nangis":
+        hasil = "Lo tipe softie banget 🥺. Suka kabur ke mimpi pas dunia nyata nyakitin.";
+        break;
+      case "scroll-moveon":
+        hasil = "Lo tangguh 💪. Scroll terus sampe move on-nya beneran.";
+        break;
+      case "halu-balas":
+        hasil = "Lo cocok jadi tokoh utama anime. Hidup lo = arc kebangkitan.";
+        break;
+      case "scroll-nangis":
+        hasil = "Sambil scroll, air mata jatuh satu-satu 😭.";
+        break;
+      case "halu-moveon":
+        hasil = "Move on-nya ke karakter 2D ya? Bisa bgt~";
+        break;
+      default:
+        hasil = "Lo unik banget sih... Tes ini bingung jawabnya 😵";
+    }
+
+    result.innerHTML = `<strong>Nama:</strong> ${name}<br><br><strong>Hasil Kuis:</strong> ${hasil}`;
+  }
+</script>
+
+<script>
+  const motivasi = [
+    "Lo kuat kok! Kaya charger 100 watt!",
+    "Mending gagal sekarang daripada pas udah tua 😎",
+    "Semua orang mulai dari 0, tapi lo udah 0,5 🐣",
+    "Capek wajar, nyerah jangan!",
+    "Bahkan mie instan aja butuh proses, apalagi lo 🍜",
+    "Jangan lupa senyum biar gak dikira zombie 😁"
+  ];
+
+  function saveNote() {
+    const note = document.getElementById("dailyNote").value.trim();
+    const motivasiHarian = document.getElementById("motivasiHarian");
+
+    if (!note) {
+      motivasiHarian.innerHTML = "Catatan kosong tuh kayak hati tanpa cinta 😶";
+      return;
+    }
+
+    const randomMotivasi = motivasi[Math.floor(Math.random() * motivasi.length)];
+    motivasiHarian.innerHTML = `<strong>Catatan tersimpan!</strong><br>Motivasi buat lo: "${randomMotivasi}"`;
+
+    // Optional: simpan di localStorage (biar bisa lanjut lagi nanti)
+    localStorage.setItem("catatanHarian", note);
+  }
+
+  // Auto load isi lama kalau ada
+  window.addEventListener("load", () => {
+    const savedNote = localStorage.getItem("catatanHarian");
+    if (savedNote) {
+      document.getElementById("dailyNote").value = savedNote;
+    }
+  });
+</script>
+
+<script>
+  function mulaiSimulasi() {
+    const name = document.getElementById("simName").value.trim();
+    const simArea = document.getElementById("simArea");
+
+    if (!name) {
+      simArea.innerHTML = "<p>Isi nama dulu ya 🥲</p>";
+      return;
+    }
+
+    const jalanHidup = [
+      `Setelah ngopi 3 gelas, ${name} mendadak jadi CEO Es Teh!`,
+      `${name} kerja jadi tester bantal... dan dia bahagia banget.`,
+      `${name} viral karena main game sambil nangis, sekarang jadi influencer.`,
+      `${name} memutuskan untuk buka usaha cilok dan sukses buka 38 cabang.`,
+      `Karena terlalu halu, ${name} malah jadi penulis novel fantasy terkenal.`,
+      `${name} masuk TV... gara-gara lomba makan mie tercepat.`,
+      `${name} kabarnya sampai sekarang masih galauin crush..`,
+      `${name} akan debut jadi idol kpop!`,
+      `${name} otw jadi sultan`
+    ];
+
+    const hasil = jalanHidup[Math.floor(Math.random() * jalanHidup.length)];
+    simArea.innerHTML = `<strong>Hidup ${name}:</strong><br>${hasil}`;
+  }
+</script>
+
+<script>
+  function tafsirkanMimpi() {
+    const input = document.getElementById("mimpiInput").value.trim().toLowerCase();
+    const hasil = document.getElementById("mimpiHasil");
+
+    if (!input) {
+      hasil.innerHTML = "<p>Isi dulu dong mimpinya 😴</p>";
+      return;
+    }
+
+    const tafsir = [
+      `Mimpi tentang "${input}" artinya kamu lagi dikejar kenyataan yang kamu hindari... atau kamu cuma lapar.`,
+      `Kalau mimpi "${input}", itu tandanya semesta nyuruh kamu istirahat, serius.`,
+      `"${input}"? Waduh... fix kamu calon orang besar, tapi abis ini tidur lagi aja deh.`,
+      `Artinya kamu butuh liburan, atau minimal makan enak. Jangan terlalu serius mikirin mimpi.`,
+      `Mimpi kayak gitu cuma satu artinya: kamu terlalu kreatif buat dunia nyata 😆.`,
+      `Menurut kitab halu kuno, mimpi "${input}" artinya kamu lagi disuruh nembak crush kamu. Serius!`,
+      `"${input}" menunjukkan kamu punya jiwa pemimpin... pemimpin overthinking 👑.`,
+      `Tafsir dari mimpi "${input}": semesta cuma iseng aja. Chill~`
+    ];
+
+    const random = tafsir[Math.floor(Math.random() * tafsir.length)];
+
+    hasil.innerHTML = `<p>${random}</p>`;
+  }
+</script>
+
+</body>
+</html>
